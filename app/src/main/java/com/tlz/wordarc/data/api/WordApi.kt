@@ -9,10 +9,10 @@ interface WordApi {
     @GET("{word}")
     suspend fun getWordResult(
         @Path("word") word: String
-    ): WordResultDto
+    ): WordResultDto?
 
     companion object {
-        const val BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
+        const val BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/hello/"
     }
 
 
