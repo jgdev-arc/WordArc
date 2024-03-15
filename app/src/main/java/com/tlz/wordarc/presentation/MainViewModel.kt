@@ -22,12 +22,26 @@ class MainViewModel @Inject constructor(
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
 
-    private val searchJob: Job? = null
+    private var searchJob: Job? = null
+
+    init {
+        _mainState.update {
+            it.copy(searchWord = "Word")
+        }
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            loadWordResult()
+        }
+    }
 
     fun onEvent(mainUiEvents: MainUiEvents) {
         when (mainUiEvents) {
             MainUiEvents.OnSearchClick -> {
-                loadWordResult()
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    loadWordResult()
+                }
             }
 
             is MainUiEvents.OnSearchWordChange -> {

@@ -2,4 +2,6 @@
     <string name="app_name">WordArc</string>
     <string name="result_invalid">Result invalid</string>
     <string name="search_a_word">search a word</string>
+    <string name="definition">Definition:</string>
+    <string name="Example">Example:   </string>
 </resources>

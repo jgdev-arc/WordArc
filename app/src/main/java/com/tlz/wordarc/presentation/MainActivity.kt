@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,6 +39,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,7 +71,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            value =mainState.searchWord,
+                            value = mainState.searchWord,
                             onValueChange = {
                                 mainViewModel.onEvent(
                                     MainUiEvents.OnSearchWordChange(it)
@@ -102,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                     }
-                ) {paddingValues ->
+                ) { paddingValues ->
                     val padding = paddingValues
 
                     Box(
@@ -121,36 +123,41 @@ class MainActivity : ComponentActivity() {
     fun MainScreen(
         mainState: MainState
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 30.dp)
-        ) {
-            mainState.wordItem?.let {wordItem ->  
-                Spacer(modifier = Modifier.height(20.dp))
 
-                Text(
-                    text = wordItem.word,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+        Box(modifier = Modifier.fillMaxSize()) {
 
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = wordItem.phonetic,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(horizontal = 30.dp)
+            ) {
+                mainState.wordItem?.let { wordItem ->
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = wordItem.word,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = wordItem.phonetic,
+                        fontSize = 15.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
             }
-            
+
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .padding(top = 110.dp)
+                    .fillMaxSize()
                     .clip(
                         RoundedCornerShape(
                             topStart = 50.dp,
@@ -169,7 +176,7 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
-                    mainState.wordItem?.let {wordItem ->
+                    mainState.wordItem?.let { wordItem ->
                         WordResult(wordItem)
                     }
                 }
@@ -182,12 +189,12 @@ class MainActivity : ComponentActivity() {
         LazyColumn(
             contentPadding = PaddingValues(vertical = 32.dp)
         ) {
-            items(wordItem.meanings.size) {index ->
+            items(wordItem.meanings.size) { index ->
                 Meaning(
                     meaning = wordItem.meanings[index],
                     index = index
                 )
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
@@ -199,9 +206,11 @@ class MainActivity : ComponentActivity() {
         index: Int
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
-          
+
             Text(
                 text = "${index + 1}. ${meaning.partOfSpeech}",
                 fontSize = 17.sp,
@@ -225,6 +234,31 @@ class MainActivity : ComponentActivity() {
                         end = 12.dp
                     )
             )
+
+            if (meaning.definition.example.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(
+                        stringResource(com.tlz.wordarc.R.string.definition),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 19.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = meaning.definition.example,
+                        fontSize = 17.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                }
+            }
+
         }
     }
 
